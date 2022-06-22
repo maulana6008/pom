@@ -6,7 +6,27 @@
     $user = $koneksi->query("SELECT * FROM users");
     $bensin = $koneksi->query("SELECT * FROM bensin");
     if(isset($_POST['add'])){
-        
+        $gas_type = $_POST['type'];
+        $qty = $_POST['qty'];
+        $price = $_POST['price'];
+
+        if($koneksi->query("SELECT * FROM bensin WHERE jenis='$gas_type'")->num_rows <= 0){
+            $insert = $koneksi->query("INSERT INTO bensin VALUES(
+                NULL,
+                '".$gas_type."',
+                '".$qty."',
+                '".$price."'
+            )");
+            if($insert){
+                echo "<script>alert('Inserting Successfuly')</script>";
+                echo '<meta http-equiv="refresh" content="1">';
+            }else{
+                echo "<script>alert('Inserting Error')</script>";
+            }
+        }else{
+            echo "<script>alert('The Gas Type is Available in Database')</script>";
+        }
+
     }
 ?>
 <!DOCTYPE html>
@@ -53,7 +73,7 @@
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="index.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
@@ -79,6 +99,12 @@
                 <a class="nav-link" href="top_up.php">
                     <i class="fas fa-solid fa-money-bill"></i>
                     <span>Top Up Users</span></a>
+            </li>
+
+            <li class="nav-item active">
+                <a class="nav-link" href="bensin.php">
+                    <i class="fas fa-solid fa-gas-pump"></i>
+                    <span>Gas Type</span></a>
             </li>
 
             <!-- Divider -->
@@ -193,7 +219,7 @@
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Gas Type</h1>
                             <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" href="#" data-toggle="modal" data-target="#refuelmodal">
-                        <i class="fas fa-solid fa-plus"></i> Add</a>
+                            <i class="fas fa-solid fa-plus"></i> Add</a>
                         </a>
                             
                     </div>
@@ -202,56 +228,48 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Data Gas Type</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>Position</th>
-                                            <th>Office</th>
-                                            <th>Age</th>
-                                            <th>Start date</th>
-                                            <th>Salary</th>
+                                            <th>No</th>
+                                            <th>Type</th>
+                                            <th>Quantity</th>
+                                            <th>Price (/ltr)</th>
+                                            <th colspan="2">Action</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>Position</th>
-                                            <th>Office</th>
-                                            <th>Age</th>
-                                            <th>Start date</th>
-                                            <th>Salary</th>
+                                            <th>No</th>
+                                            <th>Type</th>
+                                            <th>Quantity</th>
+                                            <th>Price (/ltr)</th>
+                                            <th colspan="2">Action</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
+                                        <?php $no=1;while($obj = $bensin->fetch_object()): ?>
                                         <tr>
-                                            <td>Shad Decker</td>
-                                            <td>Regional Director</td>
-                                            <td>Edinburgh</td>
-                                            <td>51</td>
-                                            <td>2008/11/13</td>
-                                            <td>$183,000</td>
+                                            <td><?= $no ?></td>
+                                            <td><?= $obj->jenis ?></td>
+                                            <td><?= $obj->isi ?></td>
+                                            <td><?= $obj->harga ?></td>
+                                            <td>
+                                                <a href="edit.php?id=<?= $obj->id_bensin ?>&edit=gas" class="btn btn-secondary">
+                                                    Edit
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a href="delete.php?id=<?= $obj->id_bensin ?>&delete=bensin" class="btn btn-danger">
+                                                    Delete
+                                                </a>
+                                            </td>
                                         </tr>
-                                        <tr>
-                                            <td>Michael Bruce</td>
-                                            <td>Javascript Developer</td>
-                                            <td>Singapore</td>
-                                            <td>29</td>
-                                            <td>2011/06/27</td>
-                                            <td>$183,000</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Donna Snider</td>
-                                            <td>Customer Support</td>
-                                            <td>New York</td>
-                                            <td>27</td>
-                                            <td>2011/01/25</td>
-                                            <td>$112,000</td>
-                                        </tr>
+                                        <?php $no++;endwhile; ?>
                                     </tbody>
                                 </table>
                             </div>
