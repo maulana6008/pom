@@ -70,6 +70,12 @@
                     <span>Top Up Users</span></a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" href="bensin.php">
+                    <i class="fas fa-solid fa-gas-pump"></i>
+                    <span>Gas Type</span></a>
+            </li>
+
             <!-- Divider -->
             <hr class="sidebar-divider">
 

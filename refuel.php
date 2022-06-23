@@ -50,7 +50,7 @@
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="index.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
@@ -66,7 +66,7 @@
 
             <!-- Nav Item - Pages Collapse Menu -->
             <!-- Nav Item - Charts -->
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link" href="refuel.php">
                     <i class="fas fa-solid fa-gas-pump"></i>
                     <span>Refuel Users</span></a>
@@ -76,6 +76,12 @@
                 <a class="nav-link" href="top_up.php">
                     <i class="fas fa-solid fa-money-bill"></i>
                     <span>Top Up Users</span></a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="bensin.php">
+                    <i class="fas fa-solid fa-gas-pump"></i>
+                    <span>Gas Type</span></a>
             </li>
 
             <!-- Divider -->

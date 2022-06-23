@@ -19,9 +19,9 @@
         
         $insert = $koneksi->query("INSERT INTO top_up VALUES(
             NULL,
+            '".$buyer."',
             '".$id_pegawai."',
             '".$amount."',
-            '".$buyer."',
             '".$date."'
         )");
         
@@ -84,7 +84,7 @@
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="index.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
@@ -106,10 +106,16 @@
                     <span>Refuel Users</span></a>
             </li>
             
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link" href="top_up.php">
                     <i class="fas fa-solid fa-money-bill"></i>
                     <span>Top Up Users</span></a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="bensin.php">
+                    <i class="fas fa-solid fa-gas-pump"></i>
+                    <span>Gas Type</span></a>
             </li>
 
             <!-- Divider -->
@@ -269,7 +275,7 @@
                                                 <td><?= $no; ?></td>
                                                 <td><?= $user_akun->fetch_object()->nama; ?></td>
                                                 <td><?= $pegawai_akun->fetch_object()->nama; ?></td>
-                                                <td><?= $obj_tp->amount; ?></td>
+                                                <td><?= $obj_tp->jumlah; ?></td>
                                                 <td><?= $obj_tp->tgl; ?></td>
                                             </tr>
                                         <?php $no++; endwhile; ?>
