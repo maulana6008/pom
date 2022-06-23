@@ -108,7 +108,6 @@ if(isset($_POST['topup'])){
         </div>
 
         <!-- Nav Item - Pages Collapse Menu -->
-        <!-- Nav Item - Charts -->
         <li class="nav-item">
             <a class="nav-link" href="refuel.php">
                 <i class="fas fa-solid fa-gas-pump"></i>
@@ -121,7 +120,7 @@ if(isset($_POST['topup'])){
                 <span>Top Up Users</span></a>
         </li>
 
-        <li class="nav-item active">
+        <li class="nav-item">
             <a class="nav-link" href="bensin.php">
                 <i class="fas fa-solid fa-gas-pump"></i>
                 <span>Gas Type</span></a>
