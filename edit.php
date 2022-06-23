@@ -3,6 +3,8 @@
 
 include 'config.php';
 $id='';
+$user = $koneksi->query("SELECT * FROM users");
+
 if(!isset($_GET['id']) or !isset($_GET['edit'])){
     echo "<script>location='index.php'</script>";
 }
@@ -15,12 +17,28 @@ if($_GET['edit'] == 'gas'){
     }
     
 }
+if($_GET['edit'] == 'topup'){
+    $id = $_GET['id'];
+    $topup = $koneksi->query("SELECT * FROM top_up WHERE id_top_up='$id'");
+}
 
 if(isset($_POST['gas'])){
     $gas_type = $_POST['type'];
     $qty = $_POST['qty'];
     $price = $_POST['price'];
     $update = $koneksi->query("UPDATE bensin SET jenis='$gas_type', isi='$qty', harga='$price' WHERE id_bensin='$id'");
+    if($update){
+        echo "<script>alert('Edit Successfuly')</script>";
+        echo "<script>location='bensin.php'</script>"; 
+    }else{
+        echo "<script>alert('Edit Failed')</script>";
+    }
+}
+if(isset($_POST['topup'])){
+    $gas_type = $_POST['type'];
+    $qty = $_POST['qty'];
+    $price = $_POST['price'];
+    $update = $koneksi->query("UPDATE top_up SET jenis='$gas_type', isi='$qty', harga='$price' WHERE id_bensin='$id'");
     if($update){
         echo "<script>alert('Edit Successfuly')</script>";
         echo "<script>location='bensin.php'</script>"; 
@@ -234,30 +252,50 @@ if(isset($_POST['gas'])){
                                 <div class="col-12">
                                     <div class="alert alert-info">Apabila tidak ingin mengubah jangan di kosongkan</div>
                                 </div>
-                            <?php $gas = $bensin->fetch_object(); ?>
-                            <?php 
+                                <?php 
                                 if($_GET['edit'] == 'gas'): 
-                            ?>
+                                    $gas = $bensin->fetch_object();
+                                    ?>
                                 <div class="col-12">
                                     <label for="jenis">Gas Type</label>
                                     <input type="text" class="form-control" name="type" id="type" 
                                         value="<?= $gas->jenis ?>">
-                                </div>
-                                <div class="col-12 mt-3">
-                                    <label for="isi">Quantity</label>
-                                    <input type="text" class="form-control" name="qty" id="qty"
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <label for="isi">Quantity</label>
+                                        <input type="text" class="form-control" name="qty" id="qty"
                                         value="<?= $gas->isi ?>">
-                                </div>
-                                <div class="col-12 mt-3">
-                                    <label for="harga">Price (/ltr)</label>
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <label for="harga">Price (/ltr)</label>
                                     <input type="text" class="form-control" name="price" id="price"
-                                        value="<?= $gas->harga ?>">
+                                    value="<?= $gas->harga ?>">
                                 </div>
                                 <div class="col-12 mt-3">
                                     <button type="submit" class="btn btn-primary" name="gas">Edit</button>
                                 </div>
+                                <?php 
+                                elseif($_GET['edit']=='topup'):
+                                    $top = $topup->fetch_object();
+                                ?>
+                                <div class="col-12">
+                                    <label for="users">user</label>
+                                    <select name="user" id="users" class="form-control">
+                                        <?php while($users = $user->fetch_object()): ?>
+                                        <option value="<?= $users->id_users ?>"><?= $users->nama ?></option>
+                                        <?php endwhile; ?>
+                                    </select>
+                                </div>
+                                <div class="col-12 mt-3">
+                                    <label for="amount">Amount</label>
+                                    <input type="text" name="amount" class="form-control" placeholder="Input Cash Amount">
+                                </div>
 
+                                <div class="col-12 mt-3">
+                                    <button type="submit" class="btn btn-primary" name="refuel">Top Up</button>
+                                </div>
                             </div>
+
                             <?php endif; ?>
                         </form>
                     </div>
