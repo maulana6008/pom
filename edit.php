@@ -2,14 +2,13 @@
 <?php
 
 include 'config.php';
-$id='';
 $user = $koneksi->query("SELECT * FROM users");
 
 if(!isset($_GET['id']) or !isset($_GET['edit'])){
     echo "<script>location='index.php'</script>";
 }
+$id = $_GET['id'];
 if($_GET['edit'] == 'gas'){
-    $id = $_GET['id'];
     $bensin = $koneksi->query("SELECT * FROM bensin WHERE id_bensin='$id'");
     if($bensin->num_rows <= 0){
         echo "<script>alert('Gas not available')</script>";
@@ -18,7 +17,6 @@ if($_GET['edit'] == 'gas'){
     
 }
 if($_GET['edit'] == 'topup'){
-    $id = $_GET['id'];
     $topup = $koneksi->query("SELECT * FROM top_up WHERE id_top_up='$id'");
 }
 
@@ -35,9 +33,13 @@ if(isset($_POST['gas'])){
     }
 }
 if(isset($_POST['topup'])){
-    $nama = $_POST['users'];
+    $id_user = $_POST['user'];
     $amount = $_POST['amount'];
-    $update = $koneksi->query("UPDATE top_up SET nama='$nama', amount='$amount' WHERE id_top_up='$id'");
+    $obj_topup = $topup->fetch_object();
+    $user_topup = $koneksi->query("SELECT * FROM users WHERE id_users='$id_user'");
+    $saldo = $user_topup->fetch_object()->saldo - $obj_topup->amount + $amount;
+    $update_saldo = $koneksi->query("UPDATE users SET saldo='$saldo' WHERE id_users='$id_user'");
+    $update = $koneksi->query("UPDATE top_up SET id_user='$id_user', amount='$amount' WHERE id_top_up='$id'");
     if($update){
         echo "<script>alert('Edit Successfuly')</script>";
         echo "<script>location='top_up.php'</script>"; 
@@ -276,22 +278,25 @@ if(isset($_POST['topup'])){
                                 elseif($_GET['edit']=='topup'):
                                     $top = $topup->fetch_object();
                                 ?>
-                                <div class="col-12">
-                                    <label for="users">user</label>
-                                    <select name="user" id="users" class="form-control">
-                                        <?php while($users = $user->fetch_object()): ?>
-                                        <option value="<?= $users->id_users ?>"><?= $users->nama ?></option>
-                                        <?php endwhile; ?>
-                                    </select>
-                                </div>
-                                <div class="col-12 mt-3">
-                                    <label for="amount">Amount</label>
-                                    <input type="text" name="amount" class="form-control" placeholder="Input Cash Amount">
-                                </div>
-
-                                <div class="col-12 mt-3">
-                                    <button type="submit" class="btn btn-primary" name="refuel">Top Up</button>
-                                </div>
+                                <form action="" method="post">
+                                    <div class="col-12">
+                                        <label for="users">user</label>
+                                        <select name="user" id="users" class="form-control">
+                                            <?php while($users = $user->fetch_object()): ?>
+                                            <option value="<?= $users->id_users ?>"><?= $users->nama ?></option>
+                                            <?php endwhile; ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <label for="amount">Amount</label>
+                                        <input type="text" name="amount" class="form-control" placeholder="Input Cash Amount"
+                                        value="<?= $top->amount ?>">
+                                    </div>
+    
+                                    <div class="col-12 mt-3">
+                                        <button type="submit" class="btn btn-primary" name="topup">Edit</button>
+                                    </div>
+                                </form>
                             </div>
 
                             <?php endif; ?>
