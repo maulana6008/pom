@@ -19,9 +19,9 @@
         
         $insert = $koneksi->query("INSERT INTO top_up VALUES(
             NULL,
-            '".$buyer."',
             '".$id_pegawai."',
             '".$amount."',
+            '".$buyer."',
             '".$date."'
         )");
         
