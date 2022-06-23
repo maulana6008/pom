@@ -13,18 +13,16 @@
         $re = $_POST['refuel'];
         $tgl = date("d-m-Y");
 
-        $data = $koneksi->query("SELECT bensin.harga, bensin.isi, users.saldo from bensin,users WHERE bensin.id_bensin='$gas_type' and users.id_users='$usr' ");
-        $obj = $data->fetch_object();
-
-        $liter = $re/$obj->harga;
-        $liter = $liter;
-        $sisa = $obj->isi - $liter;
-        $saldo = $obj->saldo - $re;
-
         if(!$gas_type or !$re){
             echo "<script>alert('All input are required')</script>";
         }else{
-
+            $data = $koneksi->query("SELECT bensin.harga, bensin.isi, users.saldo from bensin,users WHERE bensin.id_bensin='$gas_type' and users.id_users='$usr' ");
+            $obj = $data->fetch_object();
+    
+            $liter = $re/$obj->harga;
+            $liter = $liter;
+            $sisa = $obj->isi - $liter;
+            $saldo = $obj->saldo - $re;
             if($sisa >= 0){
                 $insert = $koneksi->query("INSERT INTO transaksi VALUES(
                     NULL,
