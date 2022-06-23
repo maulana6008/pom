@@ -3,7 +3,66 @@
     include 'config.php';
 
     $user = $koneksi->query("SELECT * FROM users");
+    $id_pegawai = 1;
     $bensin = $koneksi->query("SELECT * FROM bensin");
+    $transaction = $koneksi->query("SELECT * FROM transaksi");
+
+    if(isset($_POST['add'])){
+        $usr = $_POST['user'];
+        $gas_type = $_POST['gas'];
+        $re = $_POST['refuel'];
+        $tgl = date("d-m-Y");
+
+        $data = $koneksi->query("SELECT bensin.harga, bensin.isi, users.saldo from bensin,users WHERE bensin.id_bensin='$gas_type' and users.id_users='$usr' ");
+        $obj = $data->fetch_object();
+
+        $liter = $re/$obj->harga;
+        $liter = $liter;
+        $sisa = $obj->isi - $liter;
+        $saldo = $obj->saldo - $re;
+
+        if(!$gas_type or !$re){
+            echo "<script>alert('All input are required')</script>";
+        }else{
+
+            if($sisa >= 0){
+                $insert = $koneksi->query("INSERT INTO transaksi VALUES(
+                    NULL,
+                    '".$usr."',
+                    '".$gas_type."',
+                    '".$id_pegawai."',
+                    '".$liter."',
+                    '".$re."',
+                    '".$tgl."'
+                )");
+
+                if($insert){
+                    $update_bensin = $koneksi->query("UPDATE bensin set isi='$sisa' WHERE id_bensin='$gas_type'");
+                    if($update_bensin){
+                            
+                        if($obj->saldo < $re){
+                            $u_user = $koneksi->query("UPDATE users set saldo='0' WHERE id_users='$usr'");
+                            $pay = abs($saldo);
+                            if($u_user){
+                                echo "<script>alert('You Balance is less, you have to pay $pay')</script>";
+                                echo "<script>alert('Successfuly Add Refuel')</script>";
+                            }
+
+                        }else{
+                            $u_user = $koneksi->query("UPDATE users set saldo='$saldo' WHERE id_users='$usr'");
+                            if($u_user){
+                                echo "<script>alert('Successfuly Add Refuel')</script>";
+                            }
+                        }
+                    }
+                }
+            }else{
+                echo "<script>alert('Stock is not enough')</script>";
+            }
+
+        }
+
+    }
 
 ?>
 <!DOCTYPE html>
@@ -205,56 +264,61 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Refuel Data</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
+                                <thead>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>Position</th>
-                                            <th>Office</th>
-                                            <th>Age</th>
-                                            <th>Start date</th>
-                                            <th>Salary</th>
+                                            <th>No</th>
+                                            <th>User</th>
+                                            <th>Pegawai</th>
+                                            <th>Pengisian</th>
+                                            <th>Total</th>
+                                            <th>Tanggal</th>
+                                            <th colspan="2">Action</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>Position</th>
-                                            <th>Office</th>
-                                            <th>Age</th>
-                                            <th>Start date</th>
-                                            <th>Salary</th>
+                                            <th>No</th>
+                                            <th>User</th>
+                                            <th>Pegawai</th>
+                                            <th>Pengisian</th>
+                                            <th>Total</th>
+                                            <th>Tanggal</th>
+                                            <th colspan="2">Action</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
+                                    <?php 
+                                    $no=1;
+                                    while($obj = $transaction->fetch_object()): 
+                                    $id_u = $obj->id_user;
+                                    $id_p = $obj->id_pegawai;
+                                    $user_akun = $koneksi->query("SELECT * FROM users WHERE id_users='$id_u'");
+                                    $pegawai_akun = $koneksi->query("SELECT * FROM pegawai WHERE id_pegawai='$id_p'");
+                                    ?>
                                         <tr>
-                                            <td>Shad Decker</td>
-                                            <td>Regional Director</td>
-                                            <td>Edinburgh</td>
-                                            <td>51</td>
-                                            <td>2008/11/13</td>
-                                            <td>$183,000</td>
+                                            <td><?= $no ?></td>
+                                            <td><?= $user_akun->fetch_object()->nama; ?></td>
+                                            <td><?= $pegawai_akun->fetch_object()->nama; ?></td>
+                                            <td><?= $obj->pengisian ?> liter</td>
+                                            <td>Rp <?= $obj->total_harga?>,-</td>
+                                            <td><?= $obj->tgl?></td>
+                                            <td>
+                                                <a href="edit.php?id=<?= $obj->id_transaksi ?>&edit=tra-ed" class="btn btn-secondary">
+                                                    Edit
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a href="delete.php?id=<?= $obj->id_transaksi ?>&delete=tra-del" class="btn btn-danger">
+                                                    Delete
+                                                </a>
+                                            </td>
                                         </tr>
-                                        <tr>
-                                            <td>Michael Bruce</td>
-                                            <td>Javascript Developer</td>
-                                            <td>Singapore</td>
-                                            <td>29</td>
-                                            <td>2011/06/27</td>
-                                            <td>$183,000</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Donna Snider</td>
-                                            <td>Customer Support</td>
-                                            <td>New York</td>
-                                            <td>27</td>
-                                            <td>2011/01/25</td>
-                                            <td>$112,000</td>
-                                        </tr>
+                                        <?php $no++;endwhile; ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -320,32 +384,39 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-12">
-                            <label for="users">user</label>
-                            <select name="user" id="users" class="form-control">
-                                <?php while($users = $user->fetch_object()): ?>
-                                <option value="<?= $users->id_users ?>"><?= $users->nama ?></option>
-                                <?php endwhile; ?>
-                            </select>
+                    <form action="" method="post">
+                        <div class="row">
+                            <div class="col-12">
+                                <label for="users">user</label>
+                                <select name="user" id="users" class="form-control">
+                                    <?php while($users = $user->fetch_object()): ?>
+                                    <option value="<?= $users->id_users ?>"><?= $users->nama ?></option>
+                                    <?php endwhile; ?>
+                                </select>
+                            </div>
+                            <div class="col-12 mt-3">
+                                <label for="gas">Gas Type</label>
+                                <select name="gas" id="gas" class="form-control">
+                                    <option value="">-- Choose --</option>
+                                    <?php while($gas = $bensin->fetch_object()): ?>
+                                    <option class="gas-<?= $gas->id_bensin ?>" value="<?= $gas->id_bensin ?>" data-price="<?= $gas->harga ?>"><?= $gas->jenis ?></option>
+                                    <?php endwhile; ?>
+                                </select>
+                            </div>
+                            <div class="col-12 mt-3">
+                                <label for="gas">Price Gas</label>
+                                <input type="text" class="price form-control" readonly>
+                            </div>
+                            <div class="col-12 mt-3">
+                                <label for="refuel">Refuel</label>
+                                <input type="text" class="form-control" name="refuel" placeholder="Enter the money you want to use to buy gasoline">
+                            </div>
+                            <div class="col-12 mt-3">
+                                <button type="submit" class="btn btn-primary" name="add">Add</button>
+                            </div>
+    
                         </div>
-                        <div class="col-12 mt-3">
-                            <label for="gas">Gas Type</label>
-                            <select name="gas" id="gas" class="form-control">
-                                <?php while($gas = $bensin->fetch_object()): ?>
-                                <option value="<?= $gas->id_bensin ?>"><?= $gas->jenis ?></option>
-                                <?php endwhile; ?>
-                            </select>
-                        </div>
-                        <div class="col-12 mt-3">
-                            <label for="refuel">Refuel</label>
-                            <input type="text" class="form-control" name="refuel">
-                        </div>
-                        <div class="col-12 mt-3">
-                            <button type="submit" class="btn btn-primary" name="add">Add</button>
-                        </div>
-
-                    </div>
+                    </form>
                     
                 </div>
                 <div class="modal-footer">
@@ -365,13 +436,17 @@
 
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
-
-    <!-- Page level plugins -->
-    <script src="vendor/chart.js/Chart.min.js"></script>
-
-    <!-- Page level custom scripts -->
-    <script src="js/demo/chart-area-demo.js"></script>
-    <script src="js/demo/chart-pie-demo.js"></script>
+    <script>
+        let gas = document.querySelector('#gas')
+        let price = document.querySelector('.price')
+        gas.addEventListener('change', (e) => {
+            if(e.target.value){
+                price.value = document.querySelector(`.gas-${e.target.value}`).dataset.price
+            }else{
+                price.value = "";
+            }
+        })
+    </script>
 
 </body>
 
