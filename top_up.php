@@ -251,6 +251,7 @@
                                             <th>Pegawai</th>
                                             <th>Amount</th>
                                             <th>Tanggal</th>
+                                            <th colspan="2">Action</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
@@ -260,6 +261,7 @@
                                             <th>Pegawai</th>
                                             <th>Amount</th>
                                             <th>Tanggal</th>
+                                            <th colspan="2">Action</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
@@ -275,8 +277,18 @@
                                                 <td><?= $no; ?></td>
                                                 <td><?= $user_akun->fetch_object()->nama; ?></td>
                                                 <td><?= $pegawai_akun->fetch_object()->nama; ?></td>
-                                                <td><?= $obj_tp->jumlah; ?></td>
+                                                <td><?= $obj_tp->amount; ?></td>
                                                 <td><?= $obj_tp->tgl; ?></td>
+                                                <td>
+                                                <a href="edit.php?id=<?= $obj_tp->id_top_up ?>&edit=topup" class="btn btn-secondary">
+                                                    Edit
+                                                </a>
+                                                </td>
+                                                <td>
+                                                    <a href="delete.php?id=<?= $obj_tp->id_top_up ?>&delete=top-up" class="btn btn-danger">
+                                                        Delete
+                                                    </a>
+                                                </td>
                                             </tr>
                                         <?php $no++; endwhile; ?>
                                     </tbody>
