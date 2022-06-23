@@ -35,13 +35,12 @@ if(isset($_POST['gas'])){
     }
 }
 if(isset($_POST['topup'])){
-    $gas_type = $_POST['type'];
-    $qty = $_POST['qty'];
-    $price = $_POST['price'];
-    $update = $koneksi->query("UPDATE top_up SET jenis='$gas_type', isi='$qty', harga='$price' WHERE id_bensin='$id'");
+    $nama = $_POST['users'];
+    $amount = $_POST['amount'];
+    $update = $koneksi->query("UPDATE top_up SET nama='$nama', amount='$amount' WHERE id_top_up='$id'");
     if($update){
         echo "<script>alert('Edit Successfuly')</script>";
-        echo "<script>location='bensin.php'</script>"; 
+        echo "<script>location='top_up.php'</script>"; 
     }else{
         echo "<script>alert('Edit Failed')</script>";
     }
