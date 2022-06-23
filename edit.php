@@ -15,9 +15,18 @@ if($_GET['edit'] == 'gas'){
         echo "<script>location='bensin.php'</script>";
     }
     
-}
-if($_GET['edit'] == 'topup'){
+}elseif($_GET['edit'] == 'topup'){
     $topup = $koneksi->query("SELECT * FROM top_up WHERE id_top_up='$id'");
+    if($topup->num_rows <= 0){
+        echo "<script>alert('Topup is not available')</script>";
+        echo "<script>location='top_up.php'</script>";
+    }
+}elseif($_GET['edit'] == 'user'){
+    $topup = $koneksi->query("SELECT * FROM users WHERE id_users='$id'");
+    if($topup->num_rows <= 0){
+        echo "<script>alert('User is not available')</script>";
+        echo "<script>location='user.php'</script>";
+    }
 }
 
 if(isset($_POST['gas'])){
@@ -250,33 +259,35 @@ if(isset($_POST['topup'])){
                         <form action="" method="post">
                             <div class="row">
                                 <div class="col-12">
-                                    <div class="alert alert-info">Apabila tidak ingin mengubah jangan di kosongkan</div>
+                                    <div class="alert alert-info">If you don't want to change, leave it default</div>
                                 </div>
                                 <?php 
                                 if($_GET['edit'] == 'gas'): 
                                     $gas = $bensin->fetch_object();
                                     ?>
-                                <div class="col-12">
-                                    <label for="jenis">Gas Type</label>
-                                    <input type="text" class="form-control" name="type" id="type" 
-                                        value="<?= $gas->jenis ?>">
+                                <form action="" method="post">
+                                    <div class="col-12">
+                                        <label for="jenis">Gas Type</label>
+                                        <input type="text" class="form-control" name="type" id="type" 
+                                            value="<?= $gas->jenis ?>">
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <label for="isi">Quantity</label>
+                                            <input type="text" class="form-control" name="qty" id="qty"
+                                            value="<?= $gas->isi ?>">
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <label for="harga">Price (/ltr)</label>
+                                        <input type="text" class="form-control" name="price" id="price"
+                                        value="<?= $gas->harga ?>">
                                     </div>
                                     <div class="col-12 mt-3">
-                                        <label for="isi">Quantity</label>
-                                        <input type="text" class="form-control" name="qty" id="qty"
-                                        value="<?= $gas->isi ?>">
+                                        <button type="submit" class="btn btn-primary" name="gas">Edit</button>
                                     </div>
-                                    <div class="col-12 mt-3">
-                                        <label for="harga">Price (/ltr)</label>
-                                    <input type="text" class="form-control" name="price" id="price"
-                                    value="<?= $gas->harga ?>">
-                                </div>
-                                <div class="col-12 mt-3">
-                                    <button type="submit" class="btn btn-primary" name="gas">Edit</button>
-                                </div>
+                                </form>
                                 <?php 
-                                elseif($_GET['edit']=='topup'):
-                                    $top = $topup->fetch_object();
+                                    elseif($_GET['edit']=='topup'):
+                                        $top = $topup->fetch_object();
                                 ?>
                                 <form action="" method="post">
                                     <div class="col-12">
@@ -297,6 +308,34 @@ if(isset($_POST['topup'])){
                                         <button type="submit" class="btn btn-primary" name="topup">Edit</button>
                                     </div>
                                 </form>
+                                <?php 
+                                    elseif($_GET['edit']=='user'):
+                                        $users = $user->fetch_object();
+                                ?>
+                                <div class="col-12">
+                                    <div class="alert alert-warning">if you don't want to change the photo, don't upload it</div>
+                                </div>
+                                <form action="" method="post" enctype="multipart/form-data">
+                                    <div class="col-12">
+                                        <label for="nama">Nama</label>
+                                        <input type="text" name="nama" class="form-control" 
+                                        value="<?= $users->nama ?>">
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <label for="email">Email</label>
+                                        <input type="email" name="email" class="form-control" 
+                                        value="<?= $users->email ?>">
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <label for="photo">photo</label>
+                                        <input type="file" name="email" class="form-control" 
+                                        value="<?= $users->email ?>">
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <button type="submit" class="btn btn-primary" name="user">Edit</button>
+                                    </div>
+                                </form>
+
                             </div>
 
                             <?php endif; ?>
