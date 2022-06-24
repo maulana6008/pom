@@ -392,7 +392,7 @@ if(isset($_POST['add'])){
                         </div>
                         <div class="col-12 mt-3">
                             <label for="email">Email</label>
-                            <input type="text" class="form-control" name="email" id="email">
+                            <input type="email" class="form-control" name="email" id="email">
                         </div>
                         <div class="col-12 mt-3">
                             <label for="photo">Photo</label>
