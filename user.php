@@ -11,12 +11,12 @@ if(isset($_POST['add'])){
     $type = substr($_FILES['photo']['type'],0,5);
     $tmp_name = $_FILES['photo']['tmp_name'];
     $checker = $koneksi->query("SELECT * FROM users WHERE email='$email'");
-    $ext = explode(".",$_FILES['photo']['name'])[1];
-    $file_name = $nama.".".$ext;
     if($checker->num_rows >= 1){
         echo "<script>alert('email is availabel')</script>";
     }else{
         if($photo){
+            $ext = explode(".",$_FILES['photo']['name'])[1];
+            $file_name = $nama.".".$ext;
             if($type == 'image'){
                 $destination_path = getcwd().DIRECTORY_SEPARATOR;
                 $target_path = $destination_path . "/img/" . basename( $file_name );
