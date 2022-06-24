@@ -22,8 +22,8 @@ if($_GET['edit'] == 'gas'){
         echo "<script>location='top_up.php'</script>";
     }
 }elseif($_GET['edit'] == 'user'){
-    $topup = $koneksi->query("SELECT * FROM users WHERE id_users='$id'");
-    if($topup->num_rows <= 0){
+    $user_e = $koneksi->query("SELECT * FROM users WHERE id_users='$id'");
+    if($user_e->num_rows <= 0){
         echo "<script>alert('User is not available')</script>";
         echo "<script>location='user.php'</script>";
     }
@@ -54,6 +54,51 @@ if(isset($_POST['topup'])){
         echo "<script>location='top_up.php'</script>"; 
     }else{
         echo "<script>alert('Edit Failed')</script>";
+    }
+}
+
+if(isset($_POST['user_edit'])){
+    $nama = $_POST['nama'];
+    $email = $_POST['email'];
+    $photo = $_FILES['photo']['name'];
+    $tmp_name = $_FILES['photo']['tmp_name'];
+    $type = substr($_FILES['photo']['type'],0,5);
+    $checker = $koneksi->query("SELECT * FROM users WHERE email='$email' and id_users='$id'");
+    $checker1 = $koneksi->query("SELECT * FROM users WHERE email='$email'");
+    if($checker->num_rows >= 1 or $checker1->num_rows <= 0){
+        if($photo){
+            $ext = explode(".",$_FILES['photo']['name'])[1];
+            $file_name = $nama.".".$ext;
+            if($type == 'image'){
+                $destination_path = getcwd().DIRECTORY_SEPARATOR;
+                $target_path = $destination_path . "/img/" . basename( $file_name );
+                if(move_uploaded_file($tmp_name, $target_path)){
+                    $update = $koneksi->query("UPDATE users SET nama='$nama',email='$email',foto='$file_name'
+                    WHERE id_users='$id'");
+                    if($update){
+                        echo "<script>alert('Update Successfuly')</script>";
+                        echo '<script>location="user.php"</script>';
+                    }else{
+                        echo "<script>alert('Update Failed')</script>";
+                    }
+                }else{
+                    echo "<script>alert('Upload Photo Failed')</script>";
+                }
+            }else{
+                echo "<script>alert('Format photo is not valid')</script>";
+            }
+        }else{
+            $update = $koneksi->query("UPDATE users SET nama='$nama', email='$email'
+            WHERE id_users='$id'");
+            if($update){
+                echo "<script>alert('Update Successfuly')</script>";
+                echo '<script>location="user.php"</script>';
+            }else{
+                echo "<script>alert('Update Failed')</script>";
+            }
+        }
+    }elseif($checker1->num_rows >= 1){
+        echo "<script>alert('email is available')</script>";
     }
 }
 
@@ -256,7 +301,6 @@ if(isset($_POST['topup'])){
                         <h6 class="m-0 font-weight-bold text-primary">Edit <?= $_GET['edit'] ?></h6>
                     </div>
                     <div class="card-body">
-                        <form action="" method="post">
                             <div class="row">
                                 <div class="col-12">
                                     <div class="alert alert-info">If you don't want to change, leave it default</div>
@@ -310,7 +354,7 @@ if(isset($_POST['topup'])){
                                 </form>
                                 <?php 
                                     elseif($_GET['edit']=='user'):
-                                        $users = $user->fetch_object();
+                                        $users = $user_e->fetch_object();
                                 ?>
                                 <div class="col-12">
                                     <div class="alert alert-warning">if you don't want to change the photo, don't upload it</div>
@@ -328,18 +372,16 @@ if(isset($_POST['topup'])){
                                     </div>
                                     <div class="col-12 mt-3">
                                         <label for="photo">photo</label>
-                                        <input type="file" name="email" class="form-control" 
-                                        value="<?= $users->email ?>">
+                                        <input type="file" name="photo" class="form-control">
                                     </div>
                                     <div class="col-12 mt-3">
-                                        <button type="submit" class="btn btn-primary" name="user">Edit</button>
+                                        <button type="submit" class="btn btn-primary" name="user_edit">Edit</button>
                                     </div>
                                 </form>
 
                             </div>
 
                             <?php endif; ?>
-                        </form>
                     </div>
                 </div>
 
