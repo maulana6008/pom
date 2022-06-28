@@ -11,20 +11,29 @@ $id = $_GET['id'];
 if($_GET['edit'] == 'gas'){
     $bensin = $koneksi->query("SELECT * FROM bensin WHERE id_bensin='$id'");
     if($bensin->num_rows <= 0){
-        echo "<script>alert('Gas not available')</script>";
+        echo "<script>alert('Gas is unavailable')</script>";
         echo "<script>location='bensin.php'</script>";
+    }
+
+}elseif($_GET['edit'] == 'tra-ed'){
+    $transaction = $koneksi->query("SELECT * FROM transaksi WHERE id_transaksi='$id'");
+    $user_e = $koneksi->query("SELECT * FROM users WHERE id_users='$id'");
+    $bensin = $koneksi->query("SELECT * FROM bensin");
+    if($transaction->num_rows <= 0){
+        echo "<script>alert('Transaction is unavailable')</script>";
+        echo "<script>location='refuel.php'</script>";
     }
     
 }elseif($_GET['edit'] == 'topup'){
     $topup = $koneksi->query("SELECT * FROM top_up WHERE id_top_up='$id'");
     if($topup->num_rows <= 0){
-        echo "<script>alert('Topup is not available')</script>";
+        echo "<script>alert('Topup is unavailable')</script>";
         echo "<script>location='top_up.php'</script>";
     }
 }elseif($_GET['edit'] == 'user'){
-    $user_e = $koneksi->query("SELECT * FROM users WHERE id_users='$id'");
+    $user_e = $koneksi->query("SELECT * FROM users WHERE id_users='$id' ");
     if($user_e->num_rows <= 0){
-        echo "<script>alert('User is not available')</script>";
+        echo "<script>alert('User is unavailable')</script>";
         echo "<script>location='user.php'</script>";
     }
 }
@@ -54,6 +63,34 @@ if(isset($_POST['topup'])){
         echo "<script>location='top_up.php'</script>"; 
     }else{
         echo "<script>alert('Edit Failed')</script>";
+    }
+}
+
+if(isset($_POST['tra-ed'])){    
+    $usr = $_POST['user'];
+    $gas_type = $_POST['gases'];
+    $re = $_POST['refuel'];
+    $tgl = date("d-m-Y");
+    $id_pegawai = 1;
+
+    if(!$gas_type or !$re){
+        echo "<script>alert('All input are required')</script>";
+    }else{
+        $data = $koneksi->query("SELECT bensin.harga, bensin.isi, users.saldo from bensin,users WHERE bensin.id_bensin='$gas_type' and users.id_users='$usr' ");
+        $obj = $data->fetch_object();
+        $liter = $re/$obj->harga;
+        $liter = $liter;
+        $sisa = $obj->isi - $liter;
+        $saldo = $obj->saldo - $re;
+        $update = $koneksi->query("UPDATE transaksi SET id_user='$usr', id_bensin='$gas_type', total_harga='$re' WHERE id_transaksi='$id' ");
+        if($update){
+            $update_bensin = $koneksi->query("UPDATE bensin set isi='$sisa' WHERE id_bensin='$gas_type'");
+            echo "<script>alert('Edit Successfuly')</script>";
+            echo "<script>location='refuel.php'</script>"; 
+        }else{
+            echo "<script>alert('Edit Failed')</script>";
+        }
+
     }
 }
 
@@ -179,6 +216,12 @@ if(isset($_POST['user_edit'])){
             <a class="nav-link" href="bensin.php">
                 <i class="fas fa-solid fa-gas-pump"></i>
                 <span>Gas Type</span></a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="user.php">
+                <i class="fas fa-solid fa-user"></i>
+                <span>Users</span></a>
         </li>
 
         <!-- Divider -->
@@ -352,7 +395,51 @@ if(isset($_POST['user_edit'])){
                                         <button type="submit" class="btn btn-primary" name="topup">Edit</button>
                                     </div>
                                 </form>
+
+                                <!-- Edit Transaksi (Belum jadi) -->
+
                                 <?php 
+                                    elseif($_GET['edit']=='tra-ed'):
+                                        $trans = $transaction->fetch_object();
+
+                                ?>
+                                <form action="" method="post">
+                                    <div class="row ml-1">
+                                        <div class="col-12">
+                                            <label for="users">user</label>
+                                            <select name="user" id="users" class="form-control">
+                                                <?php while($users = $user->fetch_object()): ?>
+                                                <option value="<?= $users->id_users ?>"><?= $users->nama ?></option>
+                                                <?php endwhile; ?>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <label for="gas">Gas Type</label>
+                                            <select name="gases" id="gases" class="form-control">
+                                                <option value="">-- Choose --</option>
+                                                <?php while($gases = $bensin->fetch_object()): ?>
+                                                <option class="gases-<?= $gases->id_bensin ?>" value="<?= $gases->id_bensin ?>" data-price="<?= $gases->harga ?>"><?= $gases->jenis ?></option>
+                                                <?php endwhile; ?>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <label for="gases">Price Gas</label>
+                                            <input type="text" class="price form-control" readonly>
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <label for="refuel">Refuel</label>
+                                            <input type="text" class="form-control" name="refuel" placeholder="Enter cash amount to edit">
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <button type="submit" class="btn btn-primary" name="tra-ed">Edit</button>
+                                        </div>
+                
+                                    </div>
+                                </form>
+
+                            </div>
+
+                            <?php 
                                     elseif($_GET['edit']=='user'):
                                         $users = $user_e->fetch_object();
                                 ?>
@@ -381,7 +468,20 @@ if(isset($_POST['user_edit'])){
 
                             </div>
 
+
+                            <script>
+                                let gas = document.querySelector('#gases')
+                                let price = document.querySelector('.price')
+                                gas.addEventListener('change', (e) => {
+                                    if(e.target.value){
+                                        price.value = document.querySelector(`.gases-${e.target.value}`).dataset.price
+                                    }else{
+                                        price.value = "";
+                                    }
+                                })
+                            </script>
                             <?php endif; ?>
+
                     </div>
                 </div>
 

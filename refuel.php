@@ -82,6 +82,12 @@
                     <span>Gas Type</span></a>
             </li>
 
+            <li class="nav-item">
+            <a class="nav-link" href="user.php">
+                <i class="fas fa-solid fa-user"></i>
+                <span>Users</span></a>
+            </li>
+
             <!-- Divider -->
             <hr class="sidebar-divider">
 
@@ -325,7 +331,7 @@
                 <div class="modal-body">
                     <form action="" method="post">
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-12 ml-3">
                                 <label for="users">user</label>
                                 <select name="user" id="users" class="form-control">
                                     <?php while($users = $user->fetch_object()): ?>
@@ -348,7 +354,7 @@
                             </div>
                             <div class="col-12 mt-3">
                                 <label for="refuel">Refuel</label>
-                                <input type="text" class="form-control" name="refuel" placeholder="Enter the money you want to use to buy gasoline">
+                                <input type="text" class="form-control" name="refuel" placeholder="Enter cash amount">
                             </div>
                             <div class="col-12 mt-3">
                                 <button type="submit" class="btn btn-primary" name="add">Add</button>

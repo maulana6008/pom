@@ -82,6 +82,12 @@
                     <span>Gas Type</span></a>
             </li>
 
+            <li class="nav-item">
+            <a class="nav-link" href="user.php">
+                <i class="fas fa-solid fa-user"></i>
+                <span>Users</span></a>
+            </li>
+
             <!-- Divider -->
             <hr class="sidebar-divider">
 
