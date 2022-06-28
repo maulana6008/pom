@@ -7,7 +7,7 @@ if(isset($_POST['add'])){
     $photo = $_FILES['photo']['name'];
     $type = substr($_FILES['photo']['type'],0,5);
     $tmp_name = $_FILES['photo']['tmp_name'];
-    $checker = $koneksi->query("SELECT * FROM users WHERE email='$email'");
+    $checker = $koneksi->query("SELECT * FROM pegawai WHERE email='$email'");
     if(!$nama or !$email){
         echo "<script>alert('Email and Name is Required')</script>";
     }else{
@@ -21,12 +21,11 @@ if(isset($_POST['add'])){
                     $destination_path = getcwd().DIRECTORY_SEPARATOR;
                     $target_path = $destination_path . "/img/" . basename( $file_name );
                     if(move_uploaded_file($tmp_name, $target_path)){
-                        $insert = $koneksi->query("INSERT INTO users VALUES(
+                        $insert = $koneksi->query("INSERT INTO pegawai VALUES(
                             NULL,
                             '".$nama."',
-                            '".$file_name."',
                             '".$email."',
-                            '0'
+                            '".$file_name."'
                         )");
                         if($insert){
                             echo "<script>alert('Inserting Successfuly')</script>";

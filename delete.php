@@ -34,6 +34,16 @@
                 echo "<script>location='user.php'</script>";
             }
         }
+        elseif($_GET['delete'] == "pegawai"){
+            $delete = $koneksi->query("DELETE FROM pegawai WHERE id_pegawai='$id'");
+            if($delete){
+                echo "<script>alert('delete successfuly')</script>";
+                echo "<script>location='pegawai.php'</script>";
+            }else{
+                echo "<script>alert('delete failed')</script>";
+                echo "<script>location='pegawai.php'</script>";
+            }
+        }
         elseif($_GET['delete'] == "tra-del"){
             $select = $koneksi->query("SELECT users.saldo, bensin.isi, transaksi.id_user, transaksi.id_bensin,
             transaksi.pengisian, transaksi.total_harga from transaksi,users,bensin

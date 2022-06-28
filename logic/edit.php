@@ -32,7 +32,15 @@ if($_GET['edit'] == 'gas'){
         echo "<script>alert('User is unavailable')</script>";
         echo "<script>location='user.php'</script>";
     }
+}elseif($_GET['edit'] == 'pegawai'){
+    $pegawai_e = $koneksi->query("SELECT * FROM pegawai WHERE id_pegawai='$id' ");
+    if($pegawai_e->num_rows <= 0){
+        echo "<script>alert('Pegawai is unavailable')</script>";
+        echo "<script>location='pegawai.php'</script>";
+    }
 }
+
+
 
 if(isset($_POST['gas'])){
     $gas_type = $_POST['type'];
@@ -126,6 +134,51 @@ if(isset($_POST['user_edit'])){
             if($update){
                 echo "<script>alert('Update Successfuly')</script>";
                 echo '<script>location="user.php"</script>';
+            }else{
+                echo "<script>alert('Update Failed')</script>";
+            }
+        }
+    }elseif($checker1->num_rows >= 1){
+        echo "<script>alert('email is available')</script>";
+    }
+}
+
+if(isset($_POST['pegawai_edit'])){
+    $nama = $_POST['nama'];
+    $email = $_POST['email'];
+    $photo = $_FILES['photo']['name'];
+    $tmp_name = $_FILES['photo']['tmp_name'];
+    $type = substr($_FILES['photo']['type'],0,5);
+    $checker = $koneksi->query("SELECT * FROM pegawai WHERE email='$email' and id_pegawai='$id'");
+    $checker1 = $koneksi->query("SELECT * FROM pegawai WHERE email='$email'");
+    if($checker->num_rows >= 1 or $checker1->num_rows <= 0){
+        if($photo){
+            $ext = explode(".",$_FILES['photo']['name'])[1];
+            $file_name = $nama.".".$ext;
+            if($type == 'image'){
+                $destination_path = getcwd().DIRECTORY_SEPARATOR;
+                $target_path = $destination_path . "/img/" . basename( $file_name );
+                if(move_uploaded_file($tmp_name, $target_path)){
+                    $update = $koneksi->query("UPDATE pegawai SET nama='$nama',email='$email',foto='$file_name'
+                    WHERE id_pegawai='$id'");
+                    if($update){
+                        echo "<script>alert('Update Successfuly')</script>";
+                        echo '<script>location="pegawai.php"</script>';
+                    }else{
+                        echo "<script>alert('Update Failed')</script>";
+                    }
+                }else{
+                    echo "<script>alert('Upload Photo Failed')</script>";
+                }
+            }else{
+                echo "<script>alert('Format photo is not valid')</script>";
+            }
+        }else{
+            $update = $koneksi->query("UPDATE pegawai SET nama='$nama', email='$email'
+            WHERE id_pegawai='$id'");
+            if($update){
+                echo "<script>alert('Update Successfuly')</script>";
+                echo '<script>location="pegawai.php"</script>';
             }else{
                 echo "<script>alert('Update Failed')</script>";
             }
