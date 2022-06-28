@@ -13,3 +13,4 @@
         echo "<script>alert('Sessin is not valid')</script>";
         echo "<script>location='login.php'</script>";
     }
+    $obj_login = $login_check->fetch_object();

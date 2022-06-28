@@ -1,0 +1,9 @@
+let imgU = document.querySelector('.img-sendiri')
+let imgSrc = imgU.dataset.img; 
+imgU.style.width = `50px`
+imgU.style.height = `50px`
+imgU.style.borderRadius = `50%`
+imgU.style.backgroundImage = `url(img/${imgSrc})`
+imgU.style.backgroundRepeat = `no-repeat`
+imgU.style.backgroundPosition = `center center`
+imgU.style.backgroundSize = `cover`
