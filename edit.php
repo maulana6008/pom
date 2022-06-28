@@ -438,6 +438,37 @@ if(isset($_POST['user_edit'])){
                                 </form>
 
                             </div>
+
+                            <?php 
+                                    elseif($_GET['edit']=='user'):
+                                        $users = $user_e->fetch_object();
+                                ?>
+                                <div class="col-12">
+                                    <div class="alert alert-warning">if you don't want to change the photo, don't upload it</div>
+                                </div>
+                                <form action="" method="post" enctype="multipart/form-data">
+                                    <div class="col-12">
+                                        <label for="nama">Nama</label>
+                                        <input type="text" name="nama" class="form-control" 
+                                        value="<?= $users->nama ?>">
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <label for="email">Email</label>
+                                        <input type="email" name="email" class="form-control" 
+                                        value="<?= $users->email ?>">
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <label for="photo">photo</label>
+                                        <input type="file" name="photo" class="form-control">
+                                    </div>
+                                    <div class="col-12 mt-3">
+                                        <button type="submit" class="btn btn-primary" name="user_edit">Edit</button>
+                                    </div>
+                                </form>
+
+                            </div>
+
+
                             <script>
                                 let gas = document.querySelector('#gases')
                                 let price = document.querySelector('.price')
