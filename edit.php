@@ -68,7 +68,7 @@ if(isset($_POST['topup'])){
 
 if(isset($_POST['tra-ed'])){    
     $usr = $_POST['user'];
-    $gas_type = $_POST['gas'];
+    $gas_type = $_POST['gases'];
     $re = $_POST['refuel'];
     $tgl = date("d-m-Y");
     $id_pegawai = 1;
@@ -415,15 +415,15 @@ if(isset($_POST['user_edit'])){
                                         </div>
                                         <div class="col-12 mt-3">
                                             <label for="gas">Gas Type</label>
-                                            <select name="gas" id="gas" class="form-control">
+                                            <select name="gases" id="gases" class="form-control">
                                                 <option value="">-- Choose --</option>
                                                 <?php while($gases = $bensin->fetch_object()): ?>
-                                                <option class="gas-<?= $gases->id_bensin ?>" value="<?= $gases->id_bensin ?>" data-price="<?= $gases->harga ?>"><?= $gases->jenis ?></option>
+                                                <option class="gases-<?= $gases->id_bensin ?>" value="<?= $gases->id_bensin ?>" data-price="<?= $gases->harga ?>"><?= $gases->jenis ?></option>
                                                 <?php endwhile; ?>
                                             </select>
                                         </div>
                                         <div class="col-12 mt-3">
-                                            <label for="gas">Price Gas</label>
+                                            <label for="gases">Price Gas</label>
                                             <input type="text" class="price form-control" readonly>
                                         </div>
                                         <div class="col-12 mt-3">
@@ -439,11 +439,11 @@ if(isset($_POST['user_edit'])){
 
                             </div>
                             <script>
-                                let gas = document.querySelector('#gas')
+                                let gas = document.querySelector('#gases')
                                 let price = document.querySelector('.price')
                                 gas.addEventListener('change', (e) => {
                                     if(e.target.value){
-                                        price.value = document.querySelector(`.gas-${e.target.value}`).dataset.price
+                                        price.value = document.querySelector(`.gases-${e.target.value}`).dataset.price
                                     }else{
                                         price.value = "";
                                     }
