@@ -285,7 +285,7 @@ $tot_top = $koneksi ->query("SELECT sum(amount) as Total_topup FROM top_up")
                         <?php else:?>
                         <?php while($obj = $bensin->fetch_object()): ?>
                         
-                            <div class="col-md-4 mt-3">
+                            <div class="col-md-4 mb-3">
                             <div class="card">
                                 <div class="card-header">
                                 <h5 class="cart-title"><?= $obj->jenis?></h5>
