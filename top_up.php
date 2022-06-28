@@ -1,44 +1,8 @@
 <?php
 
     include 'config.php';
-    $_SESSION['user'] = 1;
-    $id_pegawai=$_SESSION['user'];
-    $user = $koneksi->query("SELECT * FROM users");
-    $pegawai = $koneksi->query("SELECT * FROM pegawai WHERE id_pegawai='$id_pegawai' ");
-    $top_ups = $koneksi->query("SELECT * FROM top_up WHERE id_pegawai='$id_pegawai' ");
-    // $user_amount = $user->fetch_object();
-    // echo "<pre>";
-    // print_r($user_amount);
-    // echo "</pre>";
-    
-    if(isset($_POST['refuel'])){
+    include 'logic/top_up.php';
 
-        $buyer = $_POST['user'];
-        $amount = $_POST['amount'];
-        $date = date("d-m-Y");
-        
-        $insert = $koneksi->query("INSERT INTO top_up VALUES(
-            NULL,
-            '".$id_pegawai."',
-            '".$amount."',
-            '".$buyer."',
-            '".$date."'
-        )");
-        
-        if($insert){
-            $user_amount = $koneksi->query("SELECT * FROM users WHERE id_users='$buyer'");
-            $user_amount = $user_amount->fetch_object()->saldo;
-            $amount = $user_amount + $amount;
-            $top_up = $koneksi->query("UPDATE users SET saldo='$amount' WHERE id_users='$buyer' ");
-            if($top_up){
-                echo "<script>alert('Successfully added to your balance')</script>";
-                echo '<meta http-equiv="refresh" content="1">';
-            }
-        }else{
-            echo "error";
-        }
-
-    }
 ?>  
 <!DOCTYPE html>
 <html lang="en">
