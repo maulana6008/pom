@@ -1,6 +1,6 @@
 <?php
 
-    $id_pegawai = 1;
+    $id_pegawai = $_SESSION['user'];
     $bensin = $koneksi->query("SELECT * FROM bensin");
     $transaction = $koneksi->query("SELECT * FROM transaksi");
 

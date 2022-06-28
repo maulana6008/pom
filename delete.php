@@ -1,5 +1,6 @@
 <?php
     include 'config.php';
+    include 'logic/sesi.php';
     if(!isset($_GET)){
         echo "<script>location='index.php'</script>";
     }else{

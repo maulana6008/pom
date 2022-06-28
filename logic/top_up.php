@@ -1,7 +1,8 @@
 <?php
 
-    $pegawai = $koneksi->query("SELECT * FROM pegawai WHERE id_pegawai='1' ");
-    $top_ups = $koneksi->query("SELECT * FROM top_up WHERE id_pegawai='1' ");
+    $id_pegawai = $_SESSION['user'];
+    $pegawai = $koneksi->query("SELECT * FROM pegawai WHERE id_pegawai='$id_pegawai' ");
+    $top_ups = $koneksi->query("SELECT * FROM top_up WHERE id_pegawai='$id_pegawai' ");
     // $user_amount = $user->fetch_object();
     // echo "<pre>";
     // print_r($user_amount);

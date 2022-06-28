@@ -1,5 +1,6 @@
 <?php
 include 'config.php';
+include 'logic/sesi.php';
 include 'logic/dashboard.php';
 ?>
 
@@ -85,6 +86,12 @@ include 'logic/dashboard.php';
             <a class="nav-link" href="user.php">
                 <i class="fas fa-solid fa-user"></i>
                 <span>Users</span></a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="pegawai.php">
+                <i class="fas fa-solid fa-user"></i>
+                <span>Pegawai</span></a>
             </li>
 
             <!-- Divider -->

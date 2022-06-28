@@ -1,5 +1,5 @@
 <?php 
-    $id_pegawai = 1;
+    $id_pegawai = $_SESSION['user'];
     $user = $koneksi->query("SELECT * FROM users");
     $tot_us = $koneksi->query("SELECT count(nama) as Total_user FROM users");
     $bensin = $koneksi->query("SELECT * FROM bensin");
