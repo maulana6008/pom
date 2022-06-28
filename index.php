@@ -1,14 +1,6 @@
 <?php
 include 'config.php';
-$_SESSION['user'] = 1;
-$id_pegawai=$_SESSION['user'];
-$user = $koneksi->query("SELECT * FROM users");
-$tot_us = $koneksi->query("SELECT count(nama) as Total_user FROM users");
-$bensin = $koneksi->query("SELECT * FROM bensin");
-$trans = $koneksi->query("SELECT * FROM transaksi WHERE id_pegawai='$id_pegawai' ");
-$total = $koneksi->query("SELECT sum(total_harga) as Penjualan FROM transaksi");
-$top_ups = $koneksi->query("SELECT * FROM top_up WHERE id_pegawai='$id_pegawai' ");
-$tot_top = $koneksi ->query("SELECT sum(amount) as Total_topup FROM top_up")
+include 'logic/dashboard.php';
 ?>
 
 <!DOCTYPE html>
@@ -44,7 +36,7 @@ $tot_top = $koneksi ->query("SELECT sum(amount) as Total_topup FROM top_up")
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -56,7 +48,7 @@ $tot_top = $koneksi ->query("SELECT sum(amount) as Total_topup FROM top_up")
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="index.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
